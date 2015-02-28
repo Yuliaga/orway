@@ -83,6 +83,7 @@
           position.ind +=position.ind<position.numm?1:0;
           var vec_x = position_array[position.ind].x - position_array[position.ind-1].x;
           var vec_y = position_array[position.ind].y - position_array[position.ind-1].y;
+          // расчет гипотенузы
           var gip = Math.sqrt(vec_x*vec_x+vec_y*vec_y);
           x_diff = vec_x/gip;
           y_diff = vec_y/gip;
