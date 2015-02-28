@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>pixi.js example 1</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../bin/pixi.dev.js"></script>
+
+</head>
+<body>
+    <script>
+
+    // create an new instance of a pixi stage
+    var stage = new PIXI.Stage(0x66FF99);
+    stage.interactive = true;
+    // create a renderer instance
+    var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+
+    // add the renderer view element to the DOM
+    document.body.appendChild(renderer.view);
+
+    requestAnimFrame(animate);
+
+    // create a texture from an image path
+    var texture = PIXI.Texture.fromImage("path.png");
+
+    // create a new Sprite using the texture
+    var bunny = new PIXI.Sprite(texture);
+
+    var kp_texture = PIXI.Texture.fromImage("KP.png");
+
+    // create a new Sprite using the texture
+
+    // center the sprites anchor point
+    bunny.anchor.x = 0.5;
+    bunny.anchor.y = 0.5;
+
+
+    // move the sprite to the center of the screen
+    bunny.position.x = window.innerWidth/2;
+    bunny.position.y = window.innerHeight/2;
+    var position = {numm:0,x:0,y:0,ind:0};
+    position.x = bunny.position.x;
+    position.y = bunny.position.y;
+
+    var pos = {};
+    pos.x = window.innerWidth/2;
+    pos.y = window.innerHeight/2;
+    position_array = [];
+    position_array.push(pos);
+    
+
+    stage.mousedown = stage.touchstart = function(e)
+    {
+      position.numm++;
+      var posi = {x:0,y:0};
+      posi.x = e.global.x;
+      posi.y = e.global.y;
+      position_array.push(posi);
+      var kp = new PIXI.Sprite(kp_texture);
+      kp.anchor.x = 0.5;
+      kp.anchor.y = 0.5;
+
+      kp.position.x = position_array[position.numm].x;
+      kp.position.y = position_array[position.numm].y;
+      stage.addChild(kp);          
+
+    };
+    var x_diff = 0;
+    var y_diff = 0;
+
+    var count = 0;    
+    stage.addChild(bunny);
+
+    function animate() {
+        requestAnimFrame(animate);
+        if (bunny.position.x == position_array[position.ind].x && bunny.position.y == position_array[position.ind].y && position.numm){
+          position.ind +=position.ind<position.numm?1:0;
+          var vec_x = position_array[position.ind].x - position_array[position.ind-1].x;
+          var vec_y = position_array[position.ind].y - position_array[position.ind-1].y;
+          var gip = Math.sqrt(vec_x*vec_x+vec_y*vec_y);
+          x_diff = vec_x/gip;
+          y_diff = vec_y/gip;
+        }
+        // just for fun, lets rotate mr rabbit a little
+        bunny.position.x += x_diff;
+        bunny.position.y += y_diff;
+        if (Math.abs(bunny.position.x - position_array[position.ind].x)<1){
+          bunny.position.x = position_array[position.ind].x;
+        }
+        if (Math.abs(bunny.position.y - position_array[position.ind].y)<1){
+          bunny.position.y = position_array[position.ind].y;
+        }
+       
+        // render the stage
+        renderer.render(stage);
+    }
+    </script>
+
+    </body>
+</html>
