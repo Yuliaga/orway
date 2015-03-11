@@ -53,24 +53,13 @@
     pos.y = window.innerHeight/2;
     position_array = [];
     position_array.push(pos);
+
+    var trek = new PIXI.Graphics();
+    stage.addChild(trek);    
+    // set a fill and line style
+    trek.beginFill(0xcF3345);
+    trek.lineStyle(2, 0xffd945, 1);
     
-
-    stage.mousedown = stage.touchstart = function(e)
-    {
-      position.numm++;
-      var posi = {x:0,y:0};
-      posi.x = e.global.x;
-      posi.y = e.global.y;
-      position_array.push(posi);
-      var kp = new PIXI.Sprite(kp_texture);
-      kp.anchor.x = 0.5;
-      kp.anchor.y = 0.5;
-
-      kp.position.x = position_array[position.numm].x;
-      kp.position.y = position_array[position.numm].y;
-      stage.addChild(kp);          
-
-    };
     var x_diff = 0;
     var y_diff = 0;                    
 
@@ -89,8 +78,14 @@
           y_diff = vec_y/gip;
         }
         // just for fun, lets rotate mr rabbit a little
+        
+        trek.moveTo(bunny.position.x,bunny.position.y);
+
         bunny.position.x += x_diff;
         bunny.position.y += y_diff;
+
+        trek.lineTo(bunny.position.x,bunny.position.y);
+
         if (Math.abs(bunny.position.x - position_array[position.ind].x)<1){
           bunny.position.x = position_array[position.ind].x;
         }
@@ -101,6 +96,24 @@
         // render the stage
         renderer.render(stage);
     }
+    stage.mousedown = stage.touchstart = function(e)
+    {
+      position.numm++;
+      var posi = {x:0,y:0};
+      posi.x = e.global.x;
+      posi.y = e.global.y;
+      position_array.push(posi);
+      var kp = new PIXI.Sprite(kp_texture);
+      kp.anchor.x = 0.5;
+      kp.anchor.y = 0.5;
+
+      kp.position.x = position_array[position.numm].x;
+      kp.position.y = position_array[position.numm].y;
+      stage.addChild(kp);          
+
+
+    };
+
     </script>
 
     </body>
