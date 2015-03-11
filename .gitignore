@@ -64,6 +64,7 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
+examples/example 1 - Basics/.idea/
 
 # Windows Installer files
 *.cab
