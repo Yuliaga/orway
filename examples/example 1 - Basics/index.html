@@ -9,7 +9,7 @@
             background-color: #000000;
         }
     </style>
-    <script src="../../../bin/pixi.dev.js"></script>
+    <script src="../../bin/pixi.dev.js"></script>
 
 </head>
 <body>
@@ -59,11 +59,13 @@
     // set a fill and line style
     trek.beginFill(0xcF3345);
     trek.lineStyle(2, 0xffd945, 1);
-    
+    trek.moveTo(bunny.position.x,bunny.position.y);    
     var x_diff = 0;
     var y_diff = 0;                    
 
-    var count = 0;    
+    var TrekLenght = 5;
+    var drawing = new Boolean(false);
+
     stage.addChild(bunny);
 
     function animate() {
@@ -77,14 +79,15 @@
           x_diff = vec_x/gip;
           y_diff = vec_y/gip;
         }
-        // just for fun, lets rotate mr rabbit a little
-        
-        trek.moveTo(bunny.position.x,bunny.position.y);
 
+        trek.moveTo(bunny.position.x,bunny.position.y);
         bunny.position.x += x_diff;
         bunny.position.y += y_diff;
 
-        trek.lineTo(bunny.position.x,bunny.position.y);
+        if (drawing){
+          trek.lineTo(bunny.position.x,bunny.position.y);
+        }
+
 
         if (Math.abs(bunny.position.x - position_array[position.ind].x)<1){
           bunny.position.x = position_array[position.ind].x;
@@ -92,7 +95,18 @@
         if (Math.abs(bunny.position.y - position_array[position.ind].y)<1){
           bunny.position.y = position_array[position.ind].y;
         }
-       
+        if (TrekLenght){
+          TrekLenght--;
+        }else{
+          if (drawing){
+            drawing =false;
+//            trek.endFill();
+          }else{
+  //          trek.beginFill(0xcF3345);
+            drawing =true;
+          }
+          TrekLenght = 5;
+        }
         // render the stage
         renderer.render(stage);
     }
