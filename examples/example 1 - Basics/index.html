@@ -30,23 +30,23 @@
     var texture_raner = PIXI.Texture.fromImage("raner.png");
 
     // create a new Sprite using the texture
-    var bunny = new PIXI.Sprite(texture_raner);
+    var raner = new PIXI.Sprite(texture_raner);
 
     var kp_texture = PIXI.Texture.fromImage("point.png");
 
     // create a new Sprite using the texture
 
     // center the sprites anchor point
-    bunny.anchor.x = 0.5;
-    bunny.anchor.y = 0.5;
+    raner.anchor.x = 0.5;
+    raner.anchor.y = 0.5;
 
 
     // move the sprite to the center of the screen
-    bunny.position.x = window.innerWidth/2;
-    bunny.position.y = window.innerHeight/2;
+    raner.position.x = window.innerWidth/2;
+    raner.position.y = window.innerHeight/2;
     var position = {numm:0,x:0,y:0,ind:0};
-    position.x = bunny.position.x;
-    position.y = bunny.position.y;
+    position.x = raner.position.x;
+    position.y = raner.position.y;
 
     var pos = {};
     pos.x = window.innerWidth/2;
@@ -59,18 +59,18 @@
     // set a fill and line style
     trek.beginFill(0xcF3345);
     trek.lineStyle(2, 0xffd945, 1);
-    trek.moveTo(bunny.position.x,bunny.position.y);    
+    trek.moveTo(raner.position.x,raner.position.y);    
     var x_diff = 0;
     var y_diff = 0;                    
 
-    var TrekLenght = 5;
+    var TrekSets = {Lenght:5,position:{x:raner.position.x,y:raner.position.y}};
     var drawing = new Boolean(false);
 
-    stage.addChild(bunny);
+    stage.addChild(raner);
 
     function animate() {
         requestAnimFrame(animate);
-        if (bunny.position.x == position_array[position.ind].x && bunny.position.y == position_array[position.ind].y && position.numm){
+        if (raner.position.x == position_array[position.ind].x && raner.position.y == position_array[position.ind].y && position.numm){
           position.ind +=position.ind<position.numm?1:0;
           var vec_x = position_array[position.ind].x - position_array[position.ind-1].x;
           var vec_y = position_array[position.ind].y - position_array[position.ind-1].y;
@@ -80,32 +80,32 @@
           y_diff = vec_y/gip;
         }
 
-        trek.moveTo(bunny.position.x,bunny.position.y);
-        bunny.position.x += x_diff;
-        bunny.position.y += y_diff;
-
-        if (drawing){
-          trek.lineTo(bunny.position.x,bunny.position.y);
-        }
+        raner.position.x += x_diff;
+        raner.position.y += y_diff;
 
 
-        if (Math.abs(bunny.position.x - position_array[position.ind].x)<1){
-          bunny.position.x = position_array[position.ind].x;
+
+        if (Math.abs(raner.position.x - position_array[position.ind].x)<1){
+          raner.position.x = position_array[position.ind].x;
         }
-        if (Math.abs(bunny.position.y - position_array[position.ind].y)<1){
-          bunny.position.y = position_array[position.ind].y;
+        if (Math.abs(raner.position.y - position_array[position.ind].y)<1){
+          raner.position.y = position_array[position.ind].y;
         }
-        if (TrekLenght){
-          TrekLenght--;
+        if (TrekSets.Lenght){
+          TrekSets.Lenght--;
         }else{
           if (drawing){
             drawing =false;
+            trek.moveTo(raner.position.x,raner.position.y);
+            trek.lineTo(TrekSets.position.x,TrekSets.position.y);
 //            trek.endFill();
           }else{
   //          trek.beginFill(0xcF3345);
+            TrekSets.position.x = raner.position.x;
+            TrekSets.position.y = raner.position.y;
             drawing =true;
           }
-          TrekLenght = 5;
+          TrekSets.Lenght = 5;
         }
         // render the stage
         renderer.render(stage);
