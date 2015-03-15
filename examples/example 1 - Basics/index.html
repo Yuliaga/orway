@@ -19,54 +19,66 @@
     var stage = new PIXI.Stage(0x3be56e);
     stage.interactive = true;
     // create a renderer instance
-    var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
-
-    // add the renderer view element to the DOM
-    document.body.appendChild(renderer.view);
-
-    requestAnimFrame(animate);
-
+    // an optional object that contains the settings for the renderer
+    var renderer = new PIXI.CanvasRenderer(window.innerWidth, window.innerHeight);
+    //var renderer = new PIXI.WebGLRenderer(window.innerWidth, window.innerHeight)
+    //var renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight);
+    // create a texture from an image path
+    var texture_map = PIXI.Texture.fromImage("map.png");
+    // create a tiling sprite ...
+    // requires a texture, a width and a height
+    // in order to work in webGL the texture size must be a power of two
+    var tilingSprite = new PIXI.TilingSprite(texture_map, window.innerWidth, window.innerHeight);
+    stage.addChild(tilingSprite);
     // create a texture from an image path
     var texture_raner = PIXI.Texture.fromImage("raner.png");
-
     // create a new Sprite using the texture
     var raner = new PIXI.Sprite(texture_raner);
-
     var kp_texture = PIXI.Texture.fromImage("point.png");
-
     // create a new Sprite using the texture
-
     // center the sprites anchor point
     raner.anchor.x = 0.5;
     raner.anchor.y = 0.5;
-
-
     // move the sprite to the center of the screen
     raner.position.x = window.innerWidth/2;
     raner.position.y = window.innerHeight/2;
     var position = {numm:0,x:0,y:0,ind:0};
     position.x = raner.position.x;
     position.y = raner.position.y;
-
     var pos = {};
     pos.x = window.innerWidth/2;
     pos.y = window.innerHeight/2;
     position_array = [];
     position_array.push(pos);
-
     var trek = new PIXI.Graphics();
     stage.addChild(trek);    
     // set a fill and line style
     trek.beginFill(0xcF3345);
-    trek.lineStyle(2, 0xffd945, 1);
+    trek.lineStyle(2, 0x131714, 1);
     trek.moveTo(raner.position.x,raner.position.y);    
     var x_diff = 0;
     var y_diff = 0;                    
-
     var TrekSets = {Lenght:5,position:{x:raner.position.x,y:raner.position.y}};
     var drawing = new Boolean(false);
-
     stage.addChild(raner);
+    var text = new PIXI.Text("raner", {font:"50px Arial", fill:"black"});
+    stage.addChild(text);
+
+
+    var img = new Image();
+    img.src = 'map.png';
+    var canvas = document.createElement("canvas");
+    canvas.width = tilingSprite.width;
+    canvas.height = tilingSprite.height;
+    var context = canvas.getContext("2d");
+    context.drawImage(img, 0, 0);
+    var data = context.getImageData(raner.position.x,raner.position.y, 1, 1).data;
+
+
+    // add the renderer view element to the DOM
+    document.body.appendChild(renderer.view);
+    requestAnimFrame(animate);
+    renderer.render(stage);
 
     function animate() {
         requestAnimFrame(animate);
@@ -74,17 +86,18 @@
           position.ind +=position.ind<position.numm?1:0;
           var vec_x = position_array[position.ind].x - position_array[position.ind-1].x;
           var vec_y = position_array[position.ind].y - position_array[position.ind-1].y;
-          // расчет гипотенузы
+          // gipotenuza calculat
           var gip = Math.sqrt(vec_x*vec_x+vec_y*vec_y);
           x_diff = vec_x/gip;
           y_diff = vec_y/gip;
         }
-
         raner.position.x += x_diff;
         raner.position.y += y_diff;
+        context.drawImage(img, 0, 0);
+        data = context.getImageData(raner.position.x,raner.position.y, 1, 1).data;
 
-
-
+        //var data = renderer.view.getContext(("2d")).getImageData(raner.position.x,raner.position.y,1,1).data;
+        text.setText("color RGB:"+data[0]+data[1]+data[2]);
         if (Math.abs(raner.position.x - position_array[position.ind].x)<1){
           raner.position.x = position_array[position.ind].x;
         }
@@ -120,12 +133,9 @@
       var kp = new PIXI.Sprite(kp_texture);
       kp.anchor.x = 0.5;
       kp.anchor.y = 0.5;
-
       kp.position.x = position_array[position.numm].x;
       kp.position.y = position_array[position.numm].y;
       stage.addChild(kp);          
-
-
     };
 
     </script>
