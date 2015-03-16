@@ -79,7 +79,17 @@
     document.body.appendChild(renderer.view);
     requestAnimFrame(animate);
     renderer.render(stage);
+    var dict = []; // create an empty array
 
+    dict.push({
+        key:   "forest_free",
+        value: "the value"
+    });
+    var type_place = [{key:"forest_free",value:255,k_s:1},
+    {key:"forest_green",value:61,k_s:0.5},
+    {key:"blue_ocean",value:33,k_s:0.1},
+    {key:"def",value:1,k_s:1}];
+    var k_s = 1;
     function animate() {
         requestAnimFrame(animate);
         if (raner.position.x == position_array[position.ind].x && raner.position.y == position_array[position.ind].y && position.numm){
@@ -91,13 +101,19 @@
           x_diff = vec_x/gip;
           y_diff = vec_y/gip;
         }
-        raner.position.x += x_diff;
-        raner.position.y += y_diff;
-        context.drawImage(img, 0, 0);
         data = context.getImageData(raner.position.x,raner.position.y, 1, 1).data;
+        var i =0;
+        for (i=0;i<3;i++){
+          if (type_place[i].value==data[0]){
+            break;
+          } 
+        }
+        text.setText("color RGB:"+type_place[i].key);
 
-        //var data = renderer.view.getContext(("2d")).getImageData(raner.position.x,raner.position.y,1,1).data;
-        text.setText("color RGB:"+data[0]+data[1]+data[2]);
+        
+        raner.position.x += x_diff*type_place[i].k_s;
+        raner.position.y += y_diff*type_place[i].k_s;
+        context.drawImage(img, 0, 0);
         if (Math.abs(raner.position.x - position_array[position.ind].x)<1){
           raner.position.x = position_array[position.ind].x;
         }
